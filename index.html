@@ -93,9 +93,11 @@ function startMV(){
     document.getElementById("music").play();
     play();
 }
-
 function play(){
     if(playing) return;
+
+    let music = document.getElementById("music");
+    music.play();   // 🔥 สั่งให้เพลงเล่นต่อ
 
     playing = true;
 
