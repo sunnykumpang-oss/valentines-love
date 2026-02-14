@@ -24,6 +24,7 @@ button{
     color:white;
     margin:5px;
     font-size:15px;
+    cursor:pointer;
 }
 
 #mvImage{
@@ -62,7 +63,7 @@ button{
     <div>
         <button onclick="prev()">⏮</button>
         <button onclick="play()">▶</button>
-        <button onclick="pause()">⏸</button>
+        <button onclick="stop()">⏸</button>
         <button onclick="next()">⏭</button>
         <button onclick="restart()">🔄</button>
     </div>
@@ -74,8 +75,10 @@ button{
 let current = 1;
 let total = 25;
 let timer = null;
+let playing = false;
 
 function goPage(n){
+    stop(); // หยุดทุกครั้งก่อนเปลี่ยนหน้า
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
     document.getElementById("page"+n).classList.add("active");
 }
@@ -92,48 +95,57 @@ function startMV(){
 }
 
 function play(){
-    if(timer) return;
-    timer=setInterval(()=>{
-        if(current<total){
+    if(playing) return;
+
+    playing = true;
+
+    timer = setInterval(function(){
+        if(current < total){
             current++;
             update();
         }else{
-            pause();
+            stop();
         }
     },3000);
 }
 
-function pause(){
+function stop(){
     clearInterval(timer);
-    timer=null;
+    timer = null;
+    playing = false;
 }
 
 function next(){
-    if(current<total){
+    stop();
+    if(current < total){
         current++;
         update();
     }
 }
 
 function prev(){
-    if(current>1){
+    stop();
+    if(current > 1){
         current--;
         update();
     }
 }
 
 function restart(){
-    pause();
-    current=1;
+    stop();
+    current = 1;
     update();
-    let music=document.getElementById("music");
-    music.currentTime=0;
+
+    let music = document.getElementById("music");
+    music.currentTime = 0;
     music.play();
+
     play();
 }
 
 document.getElementById("progressBar").addEventListener("input",function(){
-    current=parseInt(this.value);
+    stop();
+    current = parseInt(this.value);
     update();
 });
 </script>
