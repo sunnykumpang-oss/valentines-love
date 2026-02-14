@@ -13,34 +13,27 @@ body {
     background: linear-gradient(135deg, #ffd6e8, #ffe9f3, #fff5fa);
 }
 
-/* ซ่อนหน้า */
-.page {
-    display: none;
-    padding: 40px 20px;
-}
+.page { display: none; padding: 40px 20px; }
+.active { display: block; }
 
-.active {
-    display: block;
-}
-
-/* ปุ่ม */
 button {
     background: #ff69b4;
     border: none;
-    padding: 12px 25px;
+    padding: 10px 20px;
     border-radius: 25px;
     color: white;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
-    margin-top: 20px;
+    margin: 10px;
 }
 
-/* รูป */
+button:hover { opacity: 0.85; }
+
 #mvImage {
     width: 80%;
     max-width: 400px;
     border-radius: 20px;
-    margin-top: 20px;
+    margin: 20px 0;
 }
 </style>
 </head>
@@ -62,10 +55,21 @@ button {
 <!-- หน้า 3 MV -->
 <div id="page3" class="page">
     <h2>Our Memories 💕</h2>
+
     <img id="mvImage" src="love1.jpg">
+
+    <div>
+        <button onclick="prevImage()">⏮ ย้อนกลับ</button>
+        <button onclick="nextImage()">⏭ ถัดไป</button>
+    </div>
+
+    <div>
+        <button onclick="stopSlideshow()">⏸ หยุด</button>
+        <button onclick="resumeSlideshow()">▶ เล่นต่อ</button>
+    </div>
 </div>
 
-<!-- หน้า 4 จบ -->
+<!-- หน้า 4 -->
 <div id="page4" class="page">
     <h2>ขอบคุณที่อยู่ข้างกันเสมอ ❤️</h2>
     <button onclick="goHome()">💗 กลับหน้าแรก</button>
@@ -76,48 +80,12 @@ button {
 <script>
 let currentImage = 1;
 let totalImages = 25;
-let interval;
+let interval = null;
 
-function nextPage(pageNumber) {
-    document.querySelectorAll(".page").forEach(function(p) {
-        p.classList.remove("active");
-    });
-    document.getElementById("page" + pageNumber).classList.add("active");
+function nextPage(num) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById("page" + num).classList.add("active");
 }
 
-function startMV() {
-    nextPage(3);
-
-    const music = document.getElementById("bgMusic");
-    music.play();
-
-    const img = document.getElementById("mvImage");
-
-    interval = setInterval(function() {
-        currentImage++;
-
-        if (currentImage > totalImages) {
-            clearInterval(interval);
-            nextPage(4);
-            return;
-        }
-
-        img.src = "love" + currentImage + ".jpg";
-    }, 3000);
-}
-
-function goHome() {
-    clearInterval(interval);
-    currentImage = 1;
-
-    const music = document.getElementById("bgMusic");
-    music.pause();
-    music.currentTime = 0;
-
-    document.getElementById("mvImage").src = "love1.jpg";
-    nextPage(1);
-}
-</script>
-
-</body>
-</html>
+function updateImage() {
+    document.getElementById("mvImage").
