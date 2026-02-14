@@ -13,17 +13,13 @@ body {
     background: linear-gradient(135deg, #ffd6e8, #ffe9f3, #fff5fa);
 }
 
-.section {
-    display: none;
-    padding: 40px 20px;
+.page { 
+    display: none; 
+    padding: 40px 20px; 
 }
 
-:target {
-    display: block;
-}
-
-#home {
-    display: block;
+.active { 
+    display: block; 
 }
 
 button {
@@ -36,34 +32,89 @@ button {
     cursor: pointer;
     margin-top: 20px;
 }
+
+#mvImage {
+    width: 80%;
+    max-width: 400px;
+    border-radius: 20px;
+    margin-top: 20px;
+}
 </style>
 </head>
 
 <body>
 
-<div id="home" class="section">
+<!-- หน้า 1 -->
+<div id="page1" class="page active">
     <h1>💖 สุขสันต์วันวาเลนไทน์ 💖</h1>
-    <a href="#page2"><button>อ่านข้อความพิเศษ</button></a>
+    <button onclick="nextPage(2)">อ่านข้อความพิเศษ</button>
 </div>
 
-<div id="page2" class="section">
+<!-- หน้า 2 -->
+<div id="page2" class="page">
     <h2>เธอคือของขวัญที่ดีที่สุด 🎁</h2>
-    <a href="#page3"><button>▶ เล่นวิดีโอ</button></a>
+    <button onclick="startMV()">▶ เล่นวิดีโอ</button>
 </div>
 
-<div id="page3" class="section">
+<!-- หน้า 3 MV -->
+<div id="page3" class="page">
     <h2>Our Memories 💕</h2>
-    <img src="love1.jpg" width="80%" style="max-width:400px;border-radius:20px;">
-    <br>
-    <audio controls src="music1.mp3"></audio>
-    <br>
-    <a href="#page4"><button>ไปหน้าสุดท้าย</button></a>
+    <img id="mvImage" src="love1.jpg">
 </div>
 
-<div id="page4" class="section">
+<!-- หน้า 4 -->
+<div id="page4" class="page">
     <h2>ขอบคุณที่อยู่ข้างกันเสมอ ❤️</h2>
-    <a href="#home"><button>💗 กลับหน้าแรก</button></a>
+    <button onclick="goHome()">💗 กลับหน้าแรก</button>
 </div>
+
+<audio id="bgMusic" src="music1.mp3"></audio>
+
+<script>
+let currentImage = 1;
+let totalImages = 25;
+let interval;
+
+function nextPage(pageNumber) {
+    document.querySelectorAll(".page").forEach(function(p) {
+        p.classList.remove("active");
+    });
+    document.getElementById("page" + pageNumber).classList.add("active");
+}
+
+function startMV() {
+    nextPage(3);
+
+    const music = document.getElementById("bgMusic");
+    music.play();
+
+    const img = document.getElementById("mvImage");
+
+    interval = setInterval(function() {
+        currentImage++;
+
+        if (currentImage > totalImages) {
+            clearInterval(interval);
+            nextPage(4);
+            return;
+        }
+
+        img.src = "love" + currentImage + ".jpg";
+    }, 3000);
+}
+
+function goHome() {
+    clearInterval(interval);
+    currentImage = 1;
+
+    const music = document.getElementById("bgMusic");
+    music.pause();
+    music.currentTime = 0;
+
+    document.getElementById("mvImage").src = "love1.jpg";
+    nextPage(1);
+}
+</script>
 
 </body>
 </html>
