@@ -3,56 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine 💖</title>
+<title>Happy Valentine 💖</title>
 
 <style>
-body{
-    margin:0;
-    font-family:sans-serif;
-    text-align:center;
-    background:linear-gradient(135deg,#ffd6e8,#fff5fa);
+body {
+    margin: 0;
+    font-family: sans-serif;
+    text-align: center;
+    background: linear-gradient(135deg, #ffd6e8, #ffe9f3, #fff5fa);
 }
 
-.section{
-    display:none;
-    padding:40px 20px;
+.page { display: none; padding: 40px 20px; }
+.active { display: block; }
+
+button {
+    background: #ff69b4;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
 }
 
-#home{
-    display:block;
-}
+button:hover { opacity: 0.85; }
 
-:target{
-    display:block;
-}
-
-button{
-    background:#ff69b4;
-    border:none;
-    padding:12px 25px;
-    border-radius:25px;
-    color:white;
-    font-size:18px;
-    margin-top:20px;
+#mvImage {
+    width: 80%;
+    max-width: 400px;
+    border-radius: 20px;
+    margin: 20px 0;
 }
 </style>
 </head>
 
 <body>
 
-<div id="home" class="section">
+<!-- หน้า 1 -->
+<div id="page1" class="page active">
     <h1>💖 สุขสันต์วันวาเลนไทน์ 💖</h1>
-    <a href="#page2">
-        <button>อ่านข้อความพิเศษ</button>
-    </a>
+    <button onclick="nextPage(2)">อ่านข้อความพิเศษ</button>
 </div>
 
-<div id="page2" class="section">
+<!-- หน้า 2 -->
+<div id="page2" class="page">
     <h2>เธอคือของขวัญที่ดีที่สุด 🎁</h2>
-    <a href="#home">
-        <button>กลับหน้าแรก</button>
-    </a>
+    <button onclick="startMV()">▶ เล่นวิดีโอ</button>
 </div>
+
+<!-- หน้า 3 MV -->
+<div id="page3" class="page">
+    <h2>Our Memories 💕</h2>
+
+    <img id="mvImage" src="love1.jpg">
+
+    <div>
+        <button onclick="prevImage()">⏮ ย้อนกลับ</button>
+        <button onclick="nextImage()">⏭ ถัดไป</button>
+    </div>
+
+    <div>
+        <button onclick="stopSlideshow()">⏸ หยุด</button>
+        <button onclick="resumeSlideshow()">▶ เล่นต่อ</button>
+    </div>
+</div>
+
+<!-- หน้า 4 -->
+<div id="page4" class="page">
+    <h2>ขอบคุณที่อยู่ข้างกันเสมอ ❤️</h2>
+    <button onclick="goHome()">💗 กลับหน้าแรก</button>
+</div>
+
+<audio id="bgMusic" src="music1.mp3"></audio>
+
+<script>
+let currentImage = 1;
+let totalImages = 25;
+let interval = null;
+
+function nextPage(num) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById("page" + num).classList.add("active");
+}
+
+function updateImage() {
+    document.getElementById("mvImage").src = "love" + currentImage + ".jpg";
+}
+
+function startMV() {
+    nextPage(3);
+
+    const music = document.getElementById("bgMusic");
+    music.play();
+
+    startSlideshow();
+}
+
+function startSlideshow() {
+    if (interval) return;
+    interval = setInterval(() => {
+        currentImage++;
+        if (currentImage > totalImages) {
+            clearInterval(interval);
+            interval = null;
+            nextPage(4);
+            return;
+        }
+        updateImage();
+    }, 3000);
+}
+
+function stopSlideshow() {
+    clearInterval(interval);
+    interval = null;
+}
+
+function resumeSlideshow() {
+    startSlideshow();
+}
+
+function nextImage() {
+    if (currentImage < totalImages) {
+        currentImage++;
+        updateImage();
+    }
+}
+
+function prevImage() {
+    if (currentImage > 1) {
+        currentImage--;
+        updateImage();
+    }
+}
+
+function goHome() {
+    stopSlideshow();
+    currentImage = 1;
+    updateImage();
+
+    const music = document.getElementById("bgMusic");
+    music.pause();
+    music.currentTime = 0;
+
+    nextPage(1);
+}
+</script>
 
 </body>
 </html>
