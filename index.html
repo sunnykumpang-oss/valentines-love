@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine For You 💖</title>
+<title>Valentine 💖</title>
 
 <style>
 body{
@@ -12,29 +12,28 @@ body{
   color:white;
   font-family:sans-serif;
   text-align:center;
-  overflow:hidden;
 }
 
 .page{
   display:none;
   min-height:100vh;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
   padding:30px;
 }
 
 .page.active{
   display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
 }
 
 button{
   margin-top:20px;
-  padding:12px 28px;
+  padding:12px 25px;
   border:none;
-  border-radius:30px;
+  border-radius:25px;
   background:#ff2e63;
-  color:#fff;
+  color:white;
   font-size:16px;
 }
 
@@ -47,26 +46,22 @@ button{
   align-items:center;
 }
 
-.slide{
-  position:absolute;
+#slideImage{
   max-width:90vw;
   max-height:90vh;
   object-fit:contain;
-  opacity:0;
-  transition:opacity 2s ease;
+  border-radius:12px;
 }
 </style>
 </head>
 
 <body>
 
-<audio id="bgMusic" preload="auto">
-  <source src="music1.mp3" type="audio/mpeg">
-</audio>
+<audio id="music" src="music1.mp3"></audio>
 
 <div class="page active" id="page1">
   <h1>💘 สุขสันต์วันวาเลนไทน์ 💘</h1>
-  <button onclick="nextPage(2)">อ่านข้อความพิเศษ 💌</button>
+  <button onclick="goPage(2)">อ่านข้อความพิเศษ 💌</button>
 </div>
 
 <div class="page" id="page2">
@@ -74,65 +69,45 @@ button{
   <button onclick="startMV()">เปิด MV 🎶</button>
 </div>
 
-<div id="slideshow"></div>
+<div id="slideshow">
+  <img id="slideImage">
+</div>
 
 <div class="page" id="page4">
   <h1>ขอบคุณที่อยู่ข้างกันเสมอ 💖</h1>
 </div>
 
 <script>
-function nextPage(num){
+function goPage(num){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById("page"+num).classList.add("active");
 }
 
 function startMV(){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("slideshow").style.display="flex";
 
-  const slideshow=document.getElementById("slideshow");
-  slideshow.innerHTML=""; // ล้างก่อน
-  slideshow.style.display="flex";
-
-  const total=25;
-  let loadedImages=[];
-  let loadedCount=0;
-
-  for(let i=1;i<=total;i++){
-    let img=new Image();
-    img.src="love"+i+".jpg";
-    img.className="slide";
-
-    img.onload=function(){
-      loadedCount++;
-      if(loadedCount===total){
-        startSlideshow(loadedImages);
-      }
-    }
-
-    loadedImages.push(img);
-    slideshow.appendChild(img);
-  }
-}
-
-function startSlideshow(slides){
-
-  const music=document.getElementById("bgMusic");
+  const music=document.getElementById("music");
   music.currentTime=0;
   music.play();
 
-  let index=0;
-  slides[index].style.opacity="1";
+  const img=document.getElementById("slideImage");
 
-  const interval=setInterval(()=>{
-    slides[index].style.opacity="0";
-    index=(index+1)%slides.length;
-    slides[index].style.opacity="1";
+  let total=25;
+  let index=1;
+
+  img.src="love1.jpg";
+
+  let interval=setInterval(()=>{
+    index++;
+    if(index>total){
+      clearInterval(interval);
+      document.getElementById("slideshow").style.display="none";
+      document.getElementById("page4").classList.add("active");
+      return;
+    }
+    img.src="love"+index+".jpg";
   },3000);
-
-  setTimeout(()=>{
-    clearInterval(interval);
-    document.getElementById("slideshow").style.display="none";
-    document.getElementById("page4").classList.add("active");
-  }, slides.length*3000);
 }
 </script>
 
