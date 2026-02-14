@@ -79,7 +79,9 @@ let totalImages = 25;
 let interval;
 
 function nextPage(pageNumber) {
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".page").forEach(function(p) {
+        p.classList.remove("active");
+    });
     document.getElementById("page" + pageNumber).classList.add("active");
 }
 
@@ -91,6 +93,31 @@ function startMV() {
 
     const img = document.getElementById("mvImage");
 
-    interval = setInterval(() => {
+    interval = setInterval(function() {
         currentImage++;
-        if (currentImage
+
+        if (currentImage > totalImages) {
+            clearInterval(interval);
+            nextPage(4);
+            return;
+        }
+
+        img.src = "love" + currentImage + ".jpg";
+    }, 3000);
+}
+
+function goHome() {
+    clearInterval(interval);
+    currentImage = 1;
+
+    const music = document.getElementById("bgMusic");
+    music.pause();
+    music.currentTime = 0;
+
+    document.getElementById("mvImage").src = "love1.jpg";
+    nextPage(1);
+}
+</script>
+
+</body>
+</html>
