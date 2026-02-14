@@ -11,6 +11,7 @@ body{
     font-family:sans-serif;
     text-align:center;
     background:linear-gradient(135deg,#ffd6e8,#fff5fa);
+    overflow-x:hidden;
 }
 
 .page{display:none;padding:30px 20px;}
@@ -25,6 +26,8 @@ button{
     margin:5px;
     font-size:15px;
     cursor:pointer;
+    z-index:1000;
+    position:relative;
 }
 
 #mvImage{
@@ -32,11 +35,38 @@ button{
     max-width:400px;
     border-radius:20px;
     margin:20px 0;
+    position:relative;
+    z-index:1000;
 }
 
 #progressBar{
     width:80%;
     max-width:400px;
+    position:relative;
+    z-index:1000;
+}
+
+/* หัวใจลอย */
+.heart {
+    position: fixed;
+    bottom: -30px;
+    pointer-events: none;
+    z-index: 999;
+    animation: floatUp linear forwards;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-50vh) translateX(30px) rotate(180deg);
+    }
+    100% {
+        transform: translateY(-110vh) translateX(-30px) rotate(360deg);
+        opacity: 0;
+    }
 }
 </style>
 </head>
@@ -76,6 +106,7 @@ let current = 1;
 let total = 25;
 let timer = null;
 let playing = false;
+let music = document.getElementById("music");
 
 function goPage(n){
     stopMV();
@@ -90,15 +121,14 @@ function update(){
 
 function startMV(){
     goPage(3);
-    document.getElementById("music").play();
+    music.play();
     play();
 }
+
 function play(){
     if(playing) return;
 
-    let music = document.getElementById("music");
-    music.play();   // 🔥 สั่งให้เพลงเล่นต่อ
-
+    music.play();
     playing = true;
 
     timer = setInterval(function(){
@@ -115,8 +145,6 @@ function stopMV(){
     clearInterval(timer);
     timer = null;
     playing = false;
-
-    let music = document.getElementById("music");
     music.pause();
 }
 
@@ -140,11 +168,8 @@ function restart(){
     stopMV();
     current = 1;
     update();
-
-    let music = document.getElementById("music");
     music.currentTime = 0;
     music.play();
-
     play();
 }
 
@@ -153,6 +178,28 @@ document.getElementById("progressBar").addEventListener("input", function(){
     current = parseInt(this.value);
     update();
 });
+
+/* สร้างหัวใจหลายสี */
+function createHeart(){
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+
+    const colors = ["#ff4d6d", "#ff99c8", "#ff66b2", "#ff3366", "#ffffff"];
+    heart.innerHTML = "❤";
+    heart.style.color = colors[Math.floor(Math.random()*colors.length)];
+
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (15 + Math.random() * 25) + "px";
+    heart.style.animationDuration = (4 + Math.random() * 4) + "s";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 8000);
+}
+
+setInterval(createHeart, 400);
 </script>
 
 </body>
