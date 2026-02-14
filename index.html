@@ -15,7 +15,12 @@ body{
   overflow:hidden;
 }
 
-.page{ display:none; min-height:100vh; padding:30px; }
+/* หน้า */
+.page{
+  display:none;
+  min-height:100vh;
+  padding:30px;
+}
 .page.active{
   display:flex;
   flex-direction:column;
@@ -31,23 +36,30 @@ button{
   background:#ff2e63;
   color:#fff;
   font-size:16px;
+  cursor:pointer;
 }
 
+/* MV */
 #slideshow{
   position:fixed;
   inset:0;
   display:none;
   background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
 .slide{
   position:absolute;
-  width:100%;
-  height:100%;
-  object-fit:contain;   /* แก้ตรงนี้ */
+  max-width:90vw;
+  max-height:90vh;
+  object-fit:contain;
   opacity:0;
   transition:opacity 2s ease;
   animation:kenburns 8s ease-in-out infinite alternate;
+  box-shadow:0 0 40px rgba(255,255,255,0.2);
+  border-radius:10px;
 }
 
 @keyframes kenburns{
@@ -62,6 +74,7 @@ button{
 <audio id="bgMusic" preload="auto">
   <source src="music1.mp3" type="audio/mpeg">
 </audio>
+
 <div class="page active" id="page1">
   <h1>💘 สุขสันต์วันวาเลนไทน์ 💘</h1>
   <button onclick="nextPage(2)">อ่านข้อความพิเศษ 💌</button>
@@ -69,7 +82,7 @@ button{
 
 <div class="page" id="page2">
   <h2>25 ความทรงจำของเรา 🤍</h2>
-  <button onclick="startMV()">เปิด MV 🎶</button>
+  <button onclick="startMV(this)">เปิด MV 🎶</button>
 </div>
 
 <div id="slideshow"></div>
@@ -84,15 +97,21 @@ function nextPage(num){
   document.getElementById("page"+num).classList.add("active");
 }
 
-function startMV(){
+function startMV(btn){
+
+  const music=document.getElementById("bgMusic");
+
+  /* บังคับเล่นเสียงจากการกดปุ่ม */
+  music.play().then(()=>{
+    console.log("เพลงเล่นแล้ว");
+  }).catch(()=>{
+    alert("กรุณาเปิดเสียงมือถือก่อนนะ 💗");
+  });
+
   document.querySelectorAll(".page").forEach(p=>p.style.display="none");
 
   const slideshow=document.getElementById("slideshow");
-  slideshow.style.display="block";
-
-  const music=document.getElementById("bgMusic");
-  music.currentTime = 0;
-  music.play();
+  slideshow.style.display="flex";
 
   const total=25;
 
