@@ -113,6 +113,10 @@ function stop(){
     clearInterval(timer);
     timer = null;
     playing = false;
+
+    let music = document.getElementById("music");
+    music.pause();          // หยุดเพลง
+}
 }
 
 function next(){
@@ -137,10 +141,11 @@ function restart(){
     update();
 
     let music = document.getElementById("music");
-    music.currentTime = 0;
+    music.currentTime = 0;  // กลับไปต้นเพลง
     music.play();
 
     play();
+}
 }
 
 document.getElementById("progressBar").addEventListener("input",function(){
