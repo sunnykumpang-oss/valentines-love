@@ -8,23 +8,23 @@
 <style>
 body {
     margin: 0;
-    font-family: 'Prompt', sans-serif;
+    font-family: sans-serif;
     text-align: center;
     background: linear-gradient(135deg, #ffd6e8, #ffe9f3, #fff5fa);
-    overflow-x: hidden;
 }
 
-/* ซ่อน section */
-.hidden {
+/* ซ่อนหน้า */
+.page {
     display: none;
-}
-
-.section {
     padding: 40px 20px;
 }
 
+.active {
+    display: block;
+}
+
 /* ปุ่ม */
-.btn {
+button {
     background: #ff69b4;
     border: none;
     padding: 12px 25px;
@@ -33,83 +33,64 @@ body {
     font-size: 18px;
     cursor: pointer;
     margin-top: 20px;
-    box-shadow: 0 5px 15px rgba(255,105,180,0.4);
-    transition: 0.3s;
 }
 
-.btn:hover {
-    transform: scale(1.1);
-    background: #ff85c1;
-}
-
-/* MV */
+/* รูป */
 #mvImage {
     width: 80%;
     max-width: 400px;
     border-radius: 20px;
     margin-top: 20px;
-    transition: transform 4s ease-in-out;
-}
-
-/* หัวใจลอย */
-.heart {
-    position: fixed;
-    bottom: -20px;
-    font-size: 20px;
-    animation: floatUp 6s linear infinite;
-    opacity: 0.6;
-}
-
-@keyframes floatUp {
-    0% { transform: translateY(0); opacity: 0.7; }
-    100% { transform: translateY(-100vh); opacity: 0; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- หน้าแรก -->
-<div id="welcome" class="section">
+<!-- หน้า 1 -->
+<div id="page1" class="page active">
     <h1>💖 สุขสันต์วันวาเลนไทน์ 💖</h1>
-    <p>ตั้งแต่วันที่เธอเข้ามา โลกของเราก็ไม่เหมือนเดิมอีกเลย</p>
-    <button class="btn" onclick="showMessage()">อ่านข้อความพิเศษ</button>
+    <button onclick="nextPage(2)">อ่านข้อความพิเศษ</button>
 </div>
 
-<!-- ข้อความพิเศษ -->
-<div id="message" class="section hidden">
-    <h2>เธอคือของขวัญที่ดีที่สุดในชีวิตเรา 🎁💗</h2>
-    <p>ขอบคุณที่อยู่ข้างกันเสมอ</p>
-    <button class="btn" onclick="startMV()">▶ เล่นวิดีโอ</button>
+<!-- หน้า 2 -->
+<div id="page2" class="page">
+    <h2>เธอคือของขวัญที่ดีที่สุด 🎁</h2>
+    <button onclick="startMV()">▶ เล่นวิดีโอ</button>
 </div>
 
-<!-- MV -->
-<div id="mvSection" class="section hidden">
+<!-- หน้า 3 MV -->
+<div id="page3" class="page">
     <h2>Our Memories 💕</h2>
     <img id="mvImage" src="love1.jpg">
 </div>
 
-<!-- เพลง -->
-<audio id="bgMusic" src="music1.mp3"></audio>
-
-<!-- ตอนจบ -->
-<div id="ending" class="section hidden">
-    <h2>ไม่ว่าจะผ่านไปกี่ปี...</h2>
-    <p>ก็อยากให้เรายังจับมือกันแบบนี้ตลอดไปนะ ❤️</p>
-    <button class="btn" onclick="goHome()">💗 กลับหน้าแรก</button>
+<!-- หน้า 4 จบ -->
+<div id="page4" class="page">
+    <h2>ขอบคุณที่อยู่ข้างกันเสมอ ❤️</h2>
+    <button onclick="goHome()">💗 กลับหน้าแรก</button>
 </div>
+
+<audio id="bgMusic" src="music1.mp3"></audio>
 
 <script>
 let currentImage = 1;
 let totalImages = 25;
 let interval;
-const imageElement = document.getElementById("mvImage");
-const music = document.getElementById("bgMusic");
 
-function showMessage() {
-    document.getElementById("welcome").classList.add("hidden");
-    document.getElementById("message").classList.remove("hidden");
+function nextPage(pageNumber) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById("page" + pageNumber).classList.add("active");
 }
 
 function startMV() {
-    document.getElementById("message").classList.add("hidden
+    nextPage(3);
+
+    const music = document.getElementById("bgMusic");
+    music.play();
+
+    const img = document.getElementById("mvImage");
+
+    interval = setInterval(() => {
+        currentImage++;
+        if (currentImage
