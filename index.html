@@ -13,22 +13,23 @@ body{
   color:#fff;
   font-family:sans-serif;
   text-align:center;
-  overflow:hidden;
 }
 
-/* หน้า */
+/* ซ่อนทุกหน้า */
 .page{
   display:none;
-  height:100vh;
+  min-height:100vh;
   padding:30px;
-  display:flex;
-  flex-direction:column;
   justify-content:center;
   align-items:center;
+  flex-direction:column;
 }
-.active{ display:flex; }
 
-h1,h2,p{max-width:700px}
+/* แสดงเฉพาะหน้าที่ active */
+.page.active{
+  display:flex;
+}
+
 button{
   margin-top:20px;
   padding:12px 28px;
@@ -46,7 +47,9 @@ button{
   inset:0;
   display:none;
   overflow:hidden;
+  background:black;
 }
+
 .slide{
   position:absolute;
   width:100%;
@@ -57,13 +60,11 @@ button{
   animation:kenburns 8s ease-in-out infinite alternate;
 }
 
-/* เอฟเฟกต์ซูม+หมุนช้า */
 @keyframes kenburns{
   0%{transform:scale(1) rotate(0deg);}
-  100%{transform:scale(1.12) rotate(2deg);}
+  100%{transform:scale(1.1) rotate(2deg);}
 }
 
-/* หัวใจลอย */
 .heart{
   position:fixed;
   bottom:-20px;
@@ -71,6 +72,7 @@ button{
   animation:floatUp 6s linear infinite;
   font-size:20px;
 }
+
 @keyframes floatUp{
   0%{transform:translateY(0); opacity:1;}
   100%{transform:translateY(-110vh); opacity:0;}
@@ -95,7 +97,7 @@ button{
 <div class="page" id="page2">
   <h2>
     25 ความทรงจำของเรา  
-    คือ 25 เหตุผลที่ฉันรักเธอ  
+    คือ 25 เหตุผลที่ฉันรักเธอ 🤍
   </h2>
   <button onclick="startMV()">เปิด MV ของเรา 🎶</button>
 </div>
@@ -107,15 +109,16 @@ button{
 <div class="page" id="page4">
   <h1>ขอบคุณที่อยู่ในทุกช่วงเวลาของฉัน 💖</h1>
   <p>
-    ไม่ว่าจะผ่านไปกี่วัน กี่เดือน กี่ปี  
-    ฉันก็ยังอยากจับมือเธอไว้แบบนี้ตลอดไป 🤍  
-    สุขสันต์วันวาเลนไทน์นะที่รัก
+    ไม่ว่าจะผ่านไปกี่ปี  
+    ก็ยังอยากมีเธอข้าง ๆ แบบนี้ตลอดไป 🤍
   </p>
 </div>
 
 <script>
 function nextPage(num){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active");
+  });
   document.getElementById("page"+num).classList.add("active");
 }
 
@@ -147,7 +150,6 @@ function startMV(){
     slides[index].style.opacity="1";
   },3000);
 
-  /* หัวใจลอย */
   setInterval(()=>{
     let heart=document.createElement("div");
     heart.className="heart";
@@ -155,9 +157,8 @@ function startMV(){
     heart.innerHTML="💖";
     document.body.appendChild(heart);
     setTimeout(()=>heart.remove(),6000);
-  },500);
+  },600);
 
-  /* จบแล้วไปหน้าซึ้ง */
   setTimeout(()=>{
     slideshow.style.display="none";
     document.getElementById("page4").classList.add("active");
