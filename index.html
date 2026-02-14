@@ -3,113 +3,113 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine 💖</title>
+<title>Happy Valentine 💖</title>
 
 <style>
-body{
-  margin:0;
-  background:black;
-  color:white;
-  font-family:sans-serif;
-  text-align:center;
+body {
+    margin: 0;
+    font-family: 'Prompt', sans-serif;
+    text-align: center;
+    background: linear-gradient(135deg, #ffd6e8, #ffe9f3, #fff5fa);
+    overflow-x: hidden;
 }
 
-.page{
-  display:none;
-  min-height:100vh;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  padding:30px;
+/* ซ่อน section */
+.hidden {
+    display: none;
 }
 
-.page.active{
-  display:flex;
+.section {
+    padding: 40px 20px;
 }
 
-button{
-  margin-top:20px;
-  padding:12px 25px;
-  border:none;
-  border-radius:25px;
-  background:#ff2e63;
-  color:white;
-  font-size:16px;
+/* ปุ่ม */
+.btn {
+    background: #ff69b4;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(255,105,180,0.4);
+    transition: 0.3s;
 }
 
-#slideshow{
-  position:fixed;
-  inset:0;
-  background:black;
-  display:none;
-  justify-content:center;
-  align-items:center;
+.btn:hover {
+    transform: scale(1.1);
+    background: #ff85c1;
 }
 
-#slideImage{
-  max-width:90vw;
-  max-height:90vh;
-  object-fit:contain;
-  border-radius:12px;
+/* MV */
+#mvImage {
+    width: 80%;
+    max-width: 400px;
+    border-radius: 20px;
+    margin-top: 20px;
+    transition: transform 4s ease-in-out;
+}
+
+/* หัวใจลอย */
+.heart {
+    position: fixed;
+    bottom: -20px;
+    font-size: 20px;
+    animation: floatUp 6s linear infinite;
+    opacity: 0.6;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 0.7; }
+    100% { transform: translateY(-100vh); opacity: 0; }
 }
 </style>
 </head>
 
 <body>
 
-<audio id="music" src="music1.mp3"></audio>
-
-<div class="page active" id="page1">
-  <h1>💘 สุขสันต์วันวาเลนไทน์ 💘</h1>
-  <button onclick="goPage(2)">อ่านข้อความพิเศษ 💌</button>
+<!-- หน้าแรก -->
+<div id="welcome" class="section">
+    <h1>💖 สุขสันต์วันวาเลนไทน์ 💖</h1>
+    <p>ตั้งแต่วันที่เธอเข้ามา โลกของเราก็ไม่เหมือนเดิมอีกเลย</p>
+    <button class="btn" onclick="showMessage()">อ่านข้อความพิเศษ</button>
 </div>
 
-<div class="page" id="page2">
-  <h2>25 ความทรงจำของเรา 🤍</h2>
-  <button onclick="startMV()">เปิด MV 🎶</button>
+<!-- ข้อความพิเศษ -->
+<div id="message" class="section hidden">
+    <h2>เธอคือของขวัญที่ดีที่สุดในชีวิตเรา 🎁💗</h2>
+    <p>ขอบคุณที่อยู่ข้างกันเสมอ</p>
+    <button class="btn" onclick="startMV()">▶ เล่นวิดีโอ</button>
 </div>
 
-<div id="slideshow">
-  <img id="slideImage">
+<!-- MV -->
+<div id="mvSection" class="section hidden">
+    <h2>Our Memories 💕</h2>
+    <img id="mvImage" src="love1.jpg">
 </div>
 
-<div class="page" id="page4">
-  <h1>ขอบคุณที่อยู่ข้างกันเสมอ 💖</h1>
+<!-- เพลง -->
+<audio id="bgMusic" src="music1.mp3"></audio>
+
+<!-- ตอนจบ -->
+<div id="ending" class="section hidden">
+    <h2>ไม่ว่าจะผ่านไปกี่ปี...</h2>
+    <p>ก็อยากให้เรายังจับมือกันแบบนี้ตลอดไปนะ ❤️</p>
+    <button class="btn" onclick="goHome()">💗 กลับหน้าแรก</button>
 </div>
 
 <script>
-function goPage(num){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById("page"+num).classList.add("active");
+let currentImage = 1;
+let totalImages = 25;
+let interval;
+const imageElement = document.getElementById("mvImage");
+const music = document.getElementById("bgMusic");
+
+function showMessage() {
+    document.getElementById("welcome").classList.add("hidden");
+    document.getElementById("message").classList.remove("hidden");
 }
 
-function startMV(){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById("slideshow").style.display="flex";
-
-  const music=document.getElementById("music");
-  music.currentTime=0;
-  music.play();
-
-  const img=document.getElementById("slideImage");
-
-  let total=25;
-  let index=1;
-
-  img.src="love1.jpg";
-
-  let interval=setInterval(()=>{
-    index++;
-    if(index>total){
-      clearInterval(interval);
-      document.getElementById("slideshow").style.display="none";
-      document.getElementById("page4").classList.add("active");
-      return;
-    }
-    img.src="love"+index+".jpg";
-  },3000);
-}
-</script>
-
-</body>
-</html>
+function startMV() {
+    document.getElementById("message").classList.add("hidden
