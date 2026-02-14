@@ -6,28 +6,21 @@
 <title>Valentine For You 💖</title>
 
 <style>
-*{box-sizing:border-box}
 body{
   margin:0;
-  background:#000;
-  color:#fff;
+  background:black;
+  color:white;
   font-family:sans-serif;
   text-align:center;
+  overflow:hidden;
 }
 
-/* ซ่อนทุกหน้า */
-.page{
-  display:none;
-  min-height:100vh;
-  padding:30px;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-}
-
-/* แสดงเฉพาะหน้าที่ active */
+.page{ display:none; min-height:100vh; padding:30px; }
 .page.active{
   display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
 }
 
 button{
@@ -38,15 +31,12 @@ button{
   background:#ff2e63;
   color:#fff;
   font-size:16px;
-  cursor:pointer;
 }
 
-/* MV */
 #slideshow{
   position:fixed;
   inset:0;
   display:none;
-  overflow:hidden;
   background:black;
 }
 
@@ -54,71 +44,44 @@ button{
   position:absolute;
   width:100%;
   height:100%;
-  object-fit:cover;
+  object-fit:contain;   /* แก้ตรงนี้ */
   opacity:0;
   transition:opacity 2s ease;
   animation:kenburns 8s ease-in-out infinite alternate;
 }
 
 @keyframes kenburns{
-  0%{transform:scale(1) rotate(0deg);}
-  100%{transform:scale(1.1) rotate(2deg);}
-}
-
-.heart{
-  position:fixed;
-  bottom:-20px;
-  color:#ff4d88;
-  animation:floatUp 6s linear infinite;
-  font-size:20px;
-}
-
-@keyframes floatUp{
-  0%{transform:translateY(0); opacity:1;}
-  100%{transform:translateY(-110vh); opacity:0;}
+  0%{transform:scale(1);}
+  100%{transform:scale(1.05);}
 }
 </style>
 </head>
 
 <body>
 
-<audio id="bgMusic">
+<audio id="bgMusic" preload="auto">
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<!-- หน้า 1 -->
 <div class="page active" id="page1">
-  <h1>💘 สุขสันต์วันวาเลนไทน์นะคนพิเศษ 💘</h1>
-  <p>ตั้งแต่วันที่เธอเข้ามา โลกของฉันก็ไม่เหมือนเดิมอีกเลย 🤍</p>
+  <h1>💘 สุขสันต์วันวาเลนไทน์ 💘</h1>
   <button onclick="nextPage(2)">อ่านข้อความพิเศษ 💌</button>
 </div>
 
-<!-- หน้า 2 -->
 <div class="page" id="page2">
-  <h2>
-    25 ความทรงจำของเรา  
-    คือ 25 เหตุผลที่ฉันรักเธอ 🤍
-  </h2>
-  <button onclick="startMV()">เปิด MV ของเรา 🎶</button>
+  <h2>25 ความทรงจำของเรา 🤍</h2>
+  <button onclick="startMV()">เปิด MV 🎶</button>
 </div>
 
-<!-- MV -->
 <div id="slideshow"></div>
 
-<!-- หน้า 4 -->
 <div class="page" id="page4">
-  <h1>ขอบคุณที่อยู่ในทุกช่วงเวลาของฉัน 💖</h1>
-  <p>
-    ไม่ว่าจะผ่านไปกี่ปี  
-    ก็ยังอยากมีเธอข้าง ๆ แบบนี้ตลอดไป 🤍
-  </p>
+  <h1>ขอบคุณที่อยู่ข้างกันเสมอ 💖</h1>
 </div>
 
 <script>
 function nextPage(num){
-  document.querySelectorAll(".page").forEach(p=>{
-    p.classList.remove("active");
-  });
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById("page"+num).classList.add("active");
 }
 
@@ -129,12 +92,13 @@ function startMV(){
   slideshow.style.display="block";
 
   const music=document.getElementById("bgMusic");
+  music.currentTime = 0;
   music.play();
 
   const total=25;
 
   for(let i=1;i<=total;i++){
-    let img=document.createElement("img");
+    let img=new Image();
     img.src="love"+i+".jpg";
     img.className="slide";
     slideshow.appendChild(img);
@@ -149,15 +113,6 @@ function startMV(){
     index=(index+1)%slides.length;
     slides[index].style.opacity="1";
   },3000);
-
-  setInterval(()=>{
-    let heart=document.createElement("div");
-    heart.className="heart";
-    heart.style.left=Math.random()*100+"vw";
-    heart.innerHTML="💖";
-    document.body.appendChild(heart);
-    setTimeout(()=>heart.remove(),6000);
-  },600);
 
   setTimeout(()=>{
     slideshow.style.display="none";
