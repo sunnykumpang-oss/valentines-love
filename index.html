@@ -15,12 +15,12 @@ body{
   overflow:hidden;
 }
 
-/* หน้า */
 .page{
   display:none;
   min-height:100vh;
   padding:30px;
 }
+
 .page.active{
   display:flex;
   flex-direction:column;
@@ -36,16 +36,13 @@ button{
   background:#ff2e63;
   color:#fff;
   font-size:16px;
-  cursor:pointer;
 }
 
-/* MV */
 #slideshow{
   position:fixed;
   inset:0;
-  display:none;
   background:black;
-  display:flex;
+  display:none;
   justify-content:center;
   align-items:center;
 }
@@ -57,14 +54,6 @@ button{
   object-fit:contain;
   opacity:0;
   transition:opacity 2s ease;
-  animation:kenburns 8s ease-in-out infinite alternate;
-  box-shadow:0 0 40px rgba(255,255,255,0.2);
-  border-radius:10px;
-}
-
-@keyframes kenburns{
-  0%{transform:scale(1);}
-  100%{transform:scale(1.05);}
 }
 </style>
 </head>
@@ -82,7 +71,7 @@ button{
 
 <div class="page" id="page2">
   <h2>25 ความทรงจำของเรา 🤍</h2>
-  <button onclick="startMV(this)">เปิด MV 🎶</button>
+  <button onclick="startMV()">เปิด MV 🎶</button>
 </div>
 
 <div id="slideshow"></div>
@@ -97,45 +86,53 @@ function nextPage(num){
   document.getElementById("page"+num).classList.add("active");
 }
 
-function startMV(btn){
-
-  const music=document.getElementById("bgMusic");
-
-  /* บังคับเล่นเสียงจากการกดปุ่ม */
-  music.play().then(()=>{
-    console.log("เพลงเล่นแล้ว");
-  }).catch(()=>{
-    alert("กรุณาเปิดเสียงมือถือก่อนนะ 💗");
-  });
-
-  document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+function startMV(){
 
   const slideshow=document.getElementById("slideshow");
+  slideshow.innerHTML=""; // ล้างก่อน
   slideshow.style.display="flex";
 
   const total=25;
+  let loadedImages=[];
+  let loadedCount=0;
 
   for(let i=1;i<=total;i++){
     let img=new Image();
     img.src="love"+i+".jpg";
     img.className="slide";
+
+    img.onload=function(){
+      loadedCount++;
+      if(loadedCount===total){
+        startSlideshow(loadedImages);
+      }
+    }
+
+    loadedImages.push(img);
     slideshow.appendChild(img);
   }
+}
 
-  const slides=document.querySelectorAll(".slide");
+function startSlideshow(slides){
+
+  const music=document.getElementById("bgMusic");
+  music.currentTime=0;
+  music.play();
+
   let index=0;
-  slides[0].style.opacity="1";
+  slides[index].style.opacity="1";
 
-  setInterval(()=>{
+  const interval=setInterval(()=>{
     slides[index].style.opacity="0";
     index=(index+1)%slides.length;
     slides[index].style.opacity="1";
   },3000);
 
   setTimeout(()=>{
-    slideshow.style.display="none";
+    clearInterval(interval);
+    document.getElementById("slideshow").style.display="none";
     document.getElementById("page4").classList.add("active");
-  }, total*3000);
+  }, slides.length*3000);
 }
 </script>
 
